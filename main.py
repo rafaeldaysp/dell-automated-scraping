@@ -1,9 +1,5 @@
 from dell import DellBot
 import api
-import time
-from dotenv import load_dotenv
-import os
-from datetime import datetime
 import json
 
 def chooseBestCoupon(validCoupons: list, allCoupons: list) -> dict:
@@ -65,9 +61,4 @@ def main():
                 print(r.content)
         bot.removeFromCart()
   
-main()  
-# bot = DellBot()
-# allCoupons = api.get_coupons(bot.retailer_id)
-# validCoupons = [{"code": "CUPONOMIANB + BEMVINDO150", "discount": 40000, "available": True, "retailer_id": "bot.retailer_id", "discountLabel": "oi"}]
-# chooseBestCoupon(validCoupons, allCoupons)
-                
+main()
