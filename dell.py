@@ -5,7 +5,7 @@ from selenium.webdriver.common.by import By
 import time
 import os
 
-SLEEP_TIME = 4
+SLEEP_TIME = 7
 
 class DellBot():
     def __init__(self) -> None:
