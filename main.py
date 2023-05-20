@@ -38,11 +38,13 @@ def main():
         data['available'] = True
         validCoupons = []
         for firstCoupon in coupons:
+            print(f"testando cupom {firstCoupon['code']}")
             currentPrice = bot.tryCoupon(firstCoupon['code'], data['price'])
             if currentPrice:
                 validCoupons.append({"code": firstCoupon['code'], "discount": data['price'] - currentPrice, "available": True, "retailer_id": bot.retailer_id, "discountLabel": firstCoupon['discount'],
                                      "comments": firstCoupon['comments']})
                 for secondCoupon in [coupon for coupon in coupons if coupon != firstCoupon]:
+                    print(f"testando cupom {secondCoupon['code']}")
                     secondCurrentPrice = bot.tryCoupon(secondCoupon['code'], currentPrice)
                     if secondCurrentPrice:
                         validCoupons.append({"code": f'{firstCoupon["code"]} + {secondCoupon["code"]}', "discount": data['price'] - secondCurrentPrice, "available": True, "retailer_id": bot.retailer_id, "discountLabel": f'{firstCoupon["discount"]} + {secondCoupon["discount"]}',
