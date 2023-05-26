@@ -5,6 +5,8 @@ import json
 def chooseBestCoupon(validCoupons: list, allCoupons: list) -> dict:
     if not validCoupons:
         return None, 0
+    
+    print(validCoupons, allCoupons)
     bestCoupon = validCoupons[0]
     for coupon in validCoupons:
         if coupon['discount'] > bestCoupon['discount']:
@@ -25,12 +27,21 @@ def chooseBestCoupon(validCoupons: list, allCoupons: list) -> dict:
         
     return bestCoupon['id'], bestCouponDiscount
 
+def removeCompetitorCoupons(bestProviderName: str, couponList: list, providerList: list) -> list:
+    #newCouponList = []
+    competitorsNames = [provider['name'] for provider in providerList if provider['name'] != bestProviderName]
+    newCouponList = [coupon for coupon in couponList if not any(competitorName.upper() in coupon['code'].upper() for competitorName in competitorsNames)]
+    return newCouponList
+
 def main():
     bot = DellBot()
     allCoupons = api.get_coupons(bot.retailer_id)
     coupons = [coupon for coupon in allCoupons if coupon['available'] and ' + ' not in coupon['code']]
     products = api.get_retailer_products(bot.retailer_id)
     cashback = bot.bestCashbackFinder()
+    if cashback:
+        coupons = removeCompetitorCoupons(cashback['name'], coupons, bot.cashbackProviders)
+        
     for product in products:
         print('produto: ', product['title'], product['html_url'])
         data = {}

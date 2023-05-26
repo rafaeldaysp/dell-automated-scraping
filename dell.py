@@ -64,9 +64,12 @@ class DellBot():
             time.sleep(SLEEP_TIME)
             currentPrice = int(self.browser.find_element(By.XPATH, '//*[@id="nonpcaas-cart-summary"]/div[3]/ul/li/div[2]/strong').text[2:].replace(',', '').replace('.', '')) 
         except:
+            if 'retry' in kwargs:
+                print('refreshing page...')
+                self.browser.refresh()
+            print('Retrying coupon after 30s...')
             time.sleep(30)
-            print('Retrying coupon')
-            priceReturn = self.tryCoupon(couponCode, lastPrice)
+            priceReturn = self.tryCoupon(couponCode, lastPrice, retry=True)
         if currentPrice < lastPrice:
             priceReturn = currentPrice
         return priceReturn
@@ -109,7 +112,7 @@ class DellBot():
                 cashbackFullLabelArray = self.browser.find_element(By.XPATH, cashbackProvider['xpath']).text.split(' ')
                 for label in cashbackFullLabelArray:
                     if '%' in label:
-                        cashbackProvider['value'] = int(label[:label.find('%')])
+                        cashbackProvider['value'] = float(label[:label.find('%')].replace(',', '.'))
                         if not cashback or cashback['value'] < cashbackProvider['value']:
                             cashback = cashbackProvider
         except:
