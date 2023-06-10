@@ -31,7 +31,7 @@ class DellBot():
         op.add_argument("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36 Edg/113.0.1774.42")
         #service = Service(ChromeDriverManager().install())
         op.binary_location = os.environ.get("GOOGLE_CHROME_BIN")
-        self.browser = webdriver.Chrome(executable_path=os.environ.get(CHROMEDRIVER_PATH), options=op)
+        self.browser = webdriver.Chrome(executable_path=os.environ.get("CHROMEDRIVER_PATH"), options=op)
     
     
     def accessCart(self, url: str) -> int:
