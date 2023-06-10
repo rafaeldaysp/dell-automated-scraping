@@ -38,6 +38,7 @@ def main():
     allCoupons = api.get_coupons(bot.retailer_id)
     coupons = [coupon for coupon in allCoupons if coupon['available'] and ' + ' not in coupon['code']]
     products = api.get_retailer_products(bot.retailer_id)
+    #products = [ product for product in products if 'Inspiron' in product['title']]
     cashback = bot.bestCashbackFinder()
     if cashback:
         coupons = removeCompetitorCoupons(cashback['name'], coupons, bot.cashbackProviders)

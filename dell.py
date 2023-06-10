@@ -40,12 +40,23 @@ class DellBot():
         try:
             price = int(self.browser.find_element(By.XPATH, '/html/body/main/section[2]/div[1]/div[1]/div[2]/div[2]/span[1]/span[2]').text[3:].replace(',', '').replace('.', ''))
         except Exception as e:
-            print(e)
-            raise
+            try:
+                price = int(self.browser.find_element(By.XPATH, '//*[@id="cf-body"]/div[4]/div[2]/div[2]/div/div[2]/div').text[3:].replace(',', '').replace('.', ''))
+            except:
+                raise
         try:
             self.browser.find_element(By.XPATH, '//*[@id="add-to-cart-stack"]/div[2]/button').click()
         except Exception as e:
-            print(e)
+            try:
+                self.browser.find_element(By.XPATH, '//*[@id="cf-body"]/div[4]/div[2]/div[6]/button').click()
+            except:
+                try:
+                    self.browser.find_element(By.XPATH, '//*[@id="cf-body"]/div[4]/div[2]/div[5]/button').click()
+                except:
+                    try:
+                        self.browser.find_element(By.XPATH, '//*[@id="cf-body"]/div[4]/div[2]/div[7]/button').click()
+                    except:
+                        raise
         time.sleep(SLEEP_TIME)
         self.browser.get('https://www.dell.com/pt-br/cart')
         time.sleep(SLEEP_TIME)
@@ -77,10 +88,13 @@ class DellBot():
     def removeFromCart(self):
         try:
             self.browser.find_element(By.XPATH, '/html/body/div[4]/div/section/div/div/div[1]/div[1]/div[2]/div[2]/div[5]/section/div/div/div/div[2]/section/div[2]/div/div[2]/div/div/div[4]/div[1]/div[3]/div[2]/div[1]/div/item-quantity/div/div/a').click()
-            time.sleep(SLEEP_TIME)
         except:
-            time.sleep(30)
-            self.removeFromCart()
+            try:
+                self.browser.find_element(By.XPATH, '/html/body/div[4]/div/section/div/div/div[1]/div[1]/div[2]/div[2]/div[5]/section/div/div/div/div[2]/section/div[2]/div/div[2]/div/div/div[1]/div[4]/div[1]/div[3]/div[2]/div[1]/div/item-quantity/div/div/a').click()
+            except:
+                time.sleep(30)
+                self.removeFromCart()
+        time.sleep(SLEEP_TIME)
         
     def removeCoupon(self, couponRank, restarted=False):
         try:
@@ -120,7 +134,7 @@ class DellBot():
         return cashback
     
 if __name__ == '__main__':
-    url = 'https://www.dell.com/pt-br/shop/notebooks-dell/notebook-inspiron-15/spd/inspiron-15-5510-laptop/i5510u4101w'
+    url = 'https://www.dell.com/pt-br/shop/computadores-all-in-ones-e-workstations/desktop-gamer-alienware-aurora-r15/spd/alienware-aurora-r15-desktop/ar15w20w1'
     k = DellBot()
     price = k.accessCart(url)
     available, price = k.tryCoupon('BEMVINDO150', lastPrice=price)
