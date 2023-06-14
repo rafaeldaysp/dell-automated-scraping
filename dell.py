@@ -1,6 +1,6 @@
 from selenium import webdriver
 from webdriver_manager.chrome import ChromeDriverManager
-# from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 import time
 import os
@@ -14,7 +14,7 @@ class DellBot():
                 "name": "Cuponomia",
                 "affiliatedLink": "https://www.cuponomia.com.br/ref/a8a8ec1cba89",
                 "url": "https://www.cuponomia.com.br/desconto/dell",
-                "xpath": "/html/body/section[1]/div[1]/div[1]/div/aside/a/span",
+                "xpath": "/html/body/section[2]/div[1]/div[1]/div/aside/a/span",
             }, {
                 "name": "Meliuz",
                 "affiliatedLink": "https://www.meliuz.com.br/i/ref_bae7d6a1?ref_source=2",
@@ -28,10 +28,11 @@ class DellBot():
         op.add_argument('--no-sandbox')
         op.add_argument('--headless')
         op.add_argument('--disable-dev-shm-usage')
+        op.add_argument('--disable-blink-features=AutomationControlled')
         op.add_argument("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36 Edg/113.0.1774.42")
-        #service = Service(ChromeDriverManager().install())
-        op.binary_location = os.environ.get("GOOGLE_CHROME_BIN")
-        self.browser = webdriver.Chrome(executable_path=os.environ.get("CHROMEDRIVER_PATH"), options=op)
+        service = Service(ChromeDriverManager().install())
+        #op.binary_location = os.environ.get("GOOGLE_CHROME_BIN")
+        self.browser = webdriver.Chrome(service=service, options=op)
     
     
     def accessCart(self, url: str) -> int:
@@ -119,18 +120,18 @@ class DellBot():
         
     def bestCashbackFinder(self):
         cashback = {}
-        try:
-            for cashbackProvider in self.cashbackProviders:
-                self.browser.get(cashbackProvider['url'])
-                time.sleep(SLEEP_TIME)
-                cashbackFullLabelArray = self.browser.find_element(By.XPATH, cashbackProvider['xpath']).text.split(' ')
-                for label in cashbackFullLabelArray:
-                    if '%' in label:
-                        cashbackProvider['value'] = float(label[:label.find('%')].replace(',', '.'))
-                        if not cashback or cashback['value'] < cashbackProvider['value']:
-                            cashback = cashbackProvider
-        except:
-            print('erro na busca de cashbacks')
+        # try:
+        for cashbackProvider in self.cashbackProviders:
+            self.browser.get(cashbackProvider['url'])
+            time.sleep(SLEEP_TIME)
+            cashbackFullLabelArray = self.browser.find_element(By.XPATH, cashbackProvider['xpath']).text.split(' ')
+            for label in cashbackFullLabelArray:
+                if '%' in label:
+                    cashbackProvider['value'] = float(label[:label.find('%')].replace(',', '.'))
+                    if not cashback or cashback['value'] < cashbackProvider['value']:
+                        cashback = cashbackProvider
+        # except:
+        #     print('erro na busca de cashbacks')
         return cashback
     
 if __name__ == '__main__':
