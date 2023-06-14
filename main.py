@@ -1,6 +1,7 @@
 from dell import DellBot
 import api
 import json
+import time
 
 def chooseBestCoupon(validCoupons: list, allCoupons: list) -> dict:
     if not validCoupons:
@@ -75,4 +76,6 @@ def main():
                 print(r.content)
         bot.removeFromCart()
   
-main()
+while True:
+    main()
+    time.sleep(3600)
