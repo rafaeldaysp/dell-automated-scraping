@@ -75,6 +75,7 @@ def main():
             else:
                 print(r.content)
         bot.removeFromCart()
+    bot.closeBrowser()
   
 while True:
     main()
