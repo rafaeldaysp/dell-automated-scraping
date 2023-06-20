@@ -15,6 +15,7 @@ class DellBot():
                 "affiliatedLink": "https://www.cuponomia.com.br/ref/a8a8ec1cba89",
                 "url": "https://www.cuponomia.com.br/desconto/dell",
                 "xpath": "/html/body/section[2]/div[1]/div[1]/div/aside/a/span",
+                "xpath2": "/html/body/section[1]/div[1]/div[1]/div/aside/a/span"
             }, {
                 "name": "Meliuz",
                 "affiliatedLink": "https://www.meliuz.com.br/i/ref_bae7d6a1?ref_source=2",
@@ -57,7 +58,7 @@ class DellBot():
                     try:
                         self.browser.find_element(By.XPATH, '//*[@id="cf-body"]/div[4]/div[2]/div[7]/button').click()
                     except:
-                        raise
+                        self.browser.find_element(By.XPATH, '//*[@id="add-to-cart-stack"]/div[2]/button').click()
         time.sleep(SLEEP_TIME)
         self.browser.get('https://www.dell.com/pt-br/cart')
         time.sleep(SLEEP_TIME)
@@ -76,12 +77,19 @@ class DellBot():
             time.sleep(SLEEP_TIME)
             currentPrice = int(self.browser.find_element(By.XPATH, '//*[@id="nonpcaas-cart-summary"]/div[3]/ul/li/div[2]/strong').text[2:].replace(',', '').replace('.', '')) 
         except:
-            if 'retry' in kwargs:
+            if 'double_retry' in kwargs:
+                raise
+            elif 'retry' in kwargs:
                 print('refreshing page...')
+                print(kwargs)
                 self.browser.refresh()
-            print('Retrying coupon after 30s...')
-            time.sleep(30)
-            priceReturn = self.tryCoupon(couponCode, lastPrice, retry=True)
+                time.sleep(SLEEP_TIME)
+                priceReturn = self.tryCoupon(couponCode, lastPrice, double_retry = True)
+                time.sleep(SLEEP_TIME)
+            else: 
+                print('Retrying coupon after 30s...')
+                time.sleep(30)
+                priceReturn = self.tryCoupon(couponCode, lastPrice, retry = True)
         if currentPrice < lastPrice:
             priceReturn = currentPrice
         return priceReturn
@@ -124,7 +132,8 @@ class DellBot():
         for cashbackProvider in self.cashbackProviders:
             self.browser.get(cashbackProvider['url'])
             time.sleep(SLEEP_TIME)
-            cashbackFullLabelArray = self.browser.find_element(By.XPATH, cashbackProvider['xpath']).text.split(' ')
+            try: cashbackFullLabelArray = self.browser.find_element(By.XPATH, cashbackProvider['xpath']).text.split(' ')
+            except: cashbackFullLabelArray = self.browser.find_element(By.XPATH, cashbackProvider['xpath2']).text.split(' ')
             for label in cashbackFullLabelArray:
                 if '%' in label:
                     cashbackProvider['value'] = float(label[:label.find('%')].replace(',', '.'))
