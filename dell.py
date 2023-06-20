@@ -132,8 +132,11 @@ class DellBot():
         for cashbackProvider in self.cashbackProviders:
             self.browser.get(cashbackProvider['url'])
             time.sleep(SLEEP_TIME)
+            cashbackFullLabelArray = []
             try: cashbackFullLabelArray = self.browser.find_element(By.XPATH, cashbackProvider['xpath']).text.split(' ')
-            except: cashbackFullLabelArray = self.browser.find_element(By.XPATH, cashbackProvider['xpath2']).text.split(' ')
+            except: 
+                try: cashbackFullLabelArray = self.browser.find_element(By.XPATH, cashbackProvider['xpath2']).text.split(' ')
+                except: pass
             for label in cashbackFullLabelArray:
                 if '%' in label:
                     cashbackProvider['value'] = float(label[:label.find('%')].replace(',', '.'))
