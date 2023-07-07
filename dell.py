@@ -3,7 +3,6 @@ from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 import time
-import os
 
 SLEEP_TIME = 7
 
@@ -46,19 +45,24 @@ class DellBot():
                 price = int(self.browser.find_element(By.XPATH, '//*[@id="cf-body"]/div[4]/div[2]/div[2]/div/div[2]/div').text[3:].replace(',', '').replace('.', ''))
             except:
                 raise
-        try:
-            self.browser.find_element(By.XPATH, '//*[@id="add-to-cart-stack"]/div[2]/button').click()
-        except Exception as e:
+        button_xpath_list = [
+            '//*[@id="add-to-cart-stack"]/div[2]/button',
+            '//*[@id="cf-body"]/div[4]/div[2]/div[6]/button',
+            '//*[@id="cf-body"]/div[4]/div[2]/div[5]/button',
+            '//*[@id="cf-body"]/div[4]/div[2]/div[7]/button',
+        ]
+        
+        element_located = False
+        for xpath in button_xpath_list:
             try:
-                self.browser.find_element(By.XPATH, '//*[@id="cf-body"]/div[4]/div[2]/div[6]/button').click()
+                self.browser.find_element(By.XPATH, xpath).click()
+                element_located = True
             except:
-                try:
-                    self.browser.find_element(By.XPATH, '//*[@id="cf-body"]/div[4]/div[2]/div[5]/button').click()
-                except:
-                    try:
-                        self.browser.find_element(By.XPATH, '//*[@id="cf-body"]/div[4]/div[2]/div[7]/button').click()
-                    except:
-                        self.browser.find_element(By.XPATH, '//*[@id="add-to-cart-stack"]/div[2]/button').click()
+                pass
+        if not element_located:
+            print("Não foi possível adicionar ao carrinho.")
+            return -1
+        
         time.sleep(SLEEP_TIME)
         self.browser.get('https://www.dell.com/pt-br/cart')
         time.sleep(SLEEP_TIME)
@@ -147,7 +151,7 @@ class DellBot():
         return cashback
     
 if __name__ == '__main__':
-    url = 'https://www.dell.com/pt-br/shop/computadores-all-in-ones-e-workstations/desktop-gamer-alienware-aurora-r15/spd/alienware-aurora-r15-desktop/ar15w20w1'
+    url = 'https://www.dell.com/pt-br/shop/notebooks/novo-notebook-gamer-dell-g15/spd/g-series-15-5530-laptop/g5530w010w'
     k = DellBot()
     price = k.accessCart(url)
     available, price = k.tryCoupon('BEMVINDO150', lastPrice=price)

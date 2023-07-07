@@ -7,7 +7,6 @@ def chooseBestCoupon(validCoupons: list, allCoupons: list) -> dict:
     if not validCoupons:
         return None, 0
     
-    print(validCoupons, allCoupons)
     bestCoupon = validCoupons[0]
     for coupon in validCoupons:
         if coupon['discount'] > bestCoupon['discount']:
@@ -29,7 +28,6 @@ def chooseBestCoupon(validCoupons: list, allCoupons: list) -> dict:
     return bestCoupon['id'], bestCouponDiscount
 
 def removeCompetitorCoupons(bestProviderName: str, couponList: list, providerList: list) -> list:
-    #newCouponList = []
     competitorsNames = [provider['name'] for provider in providerList if provider['name'] != bestProviderName]
     newCouponList = [coupon for coupon in couponList if not any(competitorName.upper() in coupon['code'].upper() for competitorName in competitorsNames)]
     return newCouponList
@@ -39,17 +37,25 @@ def main():
     allCoupons = api.get_coupons(bot.retailer_id)
     coupons = [coupon for coupon in allCoupons if coupon['available'] and ' + ' not in coupon['code']]
     products = api.get_retailer_products(bot.retailer_id)
-    #products = [ product for product in products if 'Notebook Dell Inspiron 15 3000 i15-a0505-MM10P 15.6"' in product['title']]
+    #products = [ product for product in products if 'Dell G15 I5 13450HX + RTX 3050 6GB + Windows 11' in product['title']]
     cashback = bot.bestCashbackFinder()
     if cashback:
         coupons = removeCompetitorCoupons(cashback['name'], coupons, bot.cashbackProviders)
         
     for product in products:
         try:
-            
             print('produto: ', product['title'], product['html_url'])
             data = {}
-            data['price'] = bot.accessCart(product['html_url'])
+            price = bot.accessCart(product['html_url'])
+            if price == -1:
+                if product['available'] == True:
+                    r = api.update_product_retailers(product['id'], bot.retailer_id, {"available": False})
+                    if r.status_code == 200:
+                        print(f'{product["title"]} -> atualizado com sucesso!')
+                    else:
+                        print(r.content) 
+                raise
+            data['price'] = price
             data['available'] = True
             validCoupons = []
             for firstCoupon in coupons:
