@@ -77,7 +77,7 @@ def main():
             if cashback: cashbackPercent = cashback['value']
             finalPrice = int((data['price'] - bestCouponDiscount)*(1-cashbackPercent/100))
             if finalPrice != data['price'] - bestCouponDiscount:
-                r = api.update_product_retailers(product['id'], bot.retailer_id, {"price": finalPrice, "coupon_id": bestCouponId, "cashback": cashback}, "available": True)
+                r = api.update_product_retailers(product['id'], bot.retailer_id, {"price": finalPrice, "coupon_id": bestCouponId, "cashback": cashback, "available": True})
                 if r.status_code == 200:
                     print(f'{product["title"]} -> atualizado com sucesso!')
                 else:
