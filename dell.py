@@ -158,7 +158,7 @@ class DellBot():
                     retailer = 'Dell'
                     if cashbackProvider['name'] == 'Meliuz' and 'acer' in cashbackProvider['url']:
                         coupon_id = 'a4e0d2ba-b3ae-41f0-ba3f-fe63a9aefe94'
-                        data = { "discount": str(cashbackProvider['value'] + '%')}
+                        data = { "discount": str(cashbackProvider['value']) + '%'}
                         r = api.update_coupon(coupon_id, data)
                         retailer = 'Acer'
                     ##
