@@ -3,13 +3,22 @@ from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 import time
+import api
 
 SLEEP_TIME = 7
 
 class DellBot():
     def __init__(self) -> None:
         self.retailer_id = 'b43b67ad-a6f4-4525-8a8e-31a829e81c39'
-        self.cashbackProviders = [{
+        self.cashbackProviders = [
+            {
+                "name": "Meliuz",
+                "affiliatedLink": "https://www.meliuz.com.br/i/ref_bae7d6a1?ref_source=2",
+                "url": "https://www.meliuz.com.br/desconto/cupom-acer",
+                "xpath": "/html/body/div[3]/div[4]/button",
+                "xpath2": "/html/body/div[3]/div[4]/button",
+            },{
+            
                 "name": "Cuponomia",
                 "affiliatedLink": "https://www.cuponomia.com.br/ref/a8a8ec1cba89",
                 "url": "https://www.cuponomia.com.br/desconto/dell",
@@ -20,13 +29,13 @@ class DellBot():
                 "affiliatedLink": "https://www.meliuz.com.br/i/ref_bae7d6a1?ref_source=2",
                 "url": "https://www.meliuz.com.br/desconto/cupom-dell",
                 "xpath": "/html/body/div[3]/div[4]/button",
-            }, 
+            },
         ]
         op = webdriver.ChromeOptions()
         op.add_argument("--window-size=1920,1080")
         op.add_argument('--disable-gpu')
         op.add_argument('--no-sandbox')
-        op.add_argument('--headless')
+        #op.add_argument('--headless')
         op.add_argument('--disable-dev-shm-usage')
         op.add_argument('--disable-blink-features=AutomationControlled')
         op.add_argument("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36 Edg/113.0.1774.42")
@@ -135,7 +144,7 @@ class DellBot():
         # try:
         for cashbackProvider in self.cashbackProviders:
             self.browser.get(cashbackProvider['url'])
-            time.sleep(SLEEP_TIME)
+            time.sleep(SLEEP_TIME + 60)
             cashbackFullLabelArray = []
             try: cashbackFullLabelArray = self.browser.find_element(By.XPATH, cashbackProvider['xpath']).text.split(' ')
             except: 
@@ -144,7 +153,17 @@ class DellBot():
             for label in cashbackFullLabelArray:
                 if '%' in label:
                     cashbackProvider['value'] = float(label[:label.find('%')].replace(',', '.'))
-                    if not cashback or cashback['value'] < cashbackProvider['value']:
+
+                    ## gambiarra
+                    retailer = 'Dell'
+                    if cashbackProvider['name'] == 'Meliuz':
+                        coupon_id = 'a4e0d2ba-b3ae-41f0-ba3f-fe63a9aefe94'
+                        data = { "discount": str(cashbackProvider['value'])}
+                        r = api.update_coupon(coupon_id, data)
+                        retailer = 'Acer'
+                    ##
+                    
+                    if (not cashback or cashback['value'] < cashbackProvider['value']) and retailer == 'Dell':
                         cashback = cashbackProvider
         # except:
         #     print('erro na busca de cashbacks')
