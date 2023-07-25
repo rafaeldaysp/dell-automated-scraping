@@ -35,7 +35,7 @@ class DellBot():
         op.add_argument("--window-size=1920,1080")
         op.add_argument('--disable-gpu')
         op.add_argument('--no-sandbox')
-        op.add_argument('--headless')
+        #op.add_argument('--headless')
         op.add_argument('--disable-dev-shm-usage')
         op.add_argument('--disable-blink-features=AutomationControlled')
         op.add_argument("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36 Edg/113.0.1774.42")
@@ -158,7 +158,7 @@ class DellBot():
                     retailer = 'Dell'
                     if cashbackProvider['name'] == 'Meliuz' and 'acer' in cashbackProvider['url']:
                         coupon_id = 'a4e0d2ba-b3ae-41f0-ba3f-fe63a9aefe94'
-                        data = { "discount": str(cashbackProvider['value'])}
+                        data = { "discount": str(cashbackProvider['value'] + '%')}
                         r = api.update_coupon(coupon_id, data)
                         retailer = 'Acer'
                     ##
