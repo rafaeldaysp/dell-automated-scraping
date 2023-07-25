@@ -144,7 +144,7 @@ class DellBot():
         # try:
         for cashbackProvider in self.cashbackProviders:
             self.browser.get(cashbackProvider['url'])
-            time.sleep(SLEEP_TIME + 60)
+            time.sleep(SLEEP_TIME)
             cashbackFullLabelArray = []
             try: cashbackFullLabelArray = self.browser.find_element(By.XPATH, cashbackProvider['xpath']).text.split(' ')
             except: 
