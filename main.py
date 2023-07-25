@@ -37,11 +37,20 @@ def main():
     allCoupons = api.get_coupons(bot.retailer_id)
     coupons = [coupon for coupon in allCoupons if coupon['available'] and ' + ' not in coupon['code']]
     products = api.get_retailer_products(bot.retailer_id)
-    #products = [ product for product in products if 'Dell G15 I7 13650HX + RTX 4050 6GB' in product['title']]
+    #products = [ product for product in products if 'Desktop Gamer Alienware Aurora R15 I7 13700K RTX 3070 32GB 512GB SSD' in product['title']]
     cashback = bot.bestCashbackFinder()
+    
+    print(cashback)
     if cashback:
         coupons = removeCompetitorCoupons(cashback['name'], coupons, bot.cashbackProviders)
-        
+    
+    
+    ## regra nova
+    if cashback['value'] < 5:
+        cashback = ""
+    print(cashback)
+    ##
+
     for product in products:
         try:
             print('produto: ', product['title'], product['html_url'])
@@ -74,10 +83,12 @@ def main():
                     bot.removeCoupon(1)
             bestCouponId, bestCouponDiscount = chooseBestCoupon(validCoupons, allCoupons)
             cashbackPercent = 0
-            if cashback: cashbackPercent = cashback['value']
+            if cashback and cashback != '': cashbackPercent = cashback['value']
             finalPrice = int((data['price'] - bestCouponDiscount)*(1-cashbackPercent/100))
-            if finalPrice != data['price'] - bestCouponDiscount:
+            print(finalPrice)
+            if 1:#finalPrice != data['price'] - bestCouponDiscount:
                 r = api.update_product_retailers(product['id'], bot.retailer_id, {"price": finalPrice, "coupon_id": bestCouponId, "cashback": cashback, "available": True})
+                
                 if r.status_code == 200:
                     print(f'{product["title"]} -> atualizado com sucesso!')
                 else:
