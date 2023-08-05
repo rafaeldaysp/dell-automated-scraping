@@ -76,12 +76,14 @@ def main():
                     bot.removeCoupon(1)
             bestCouponId, bestCouponDiscount = chooseBestCoupon(validCoupons, allCoupons)
             cashbackPercent = 0
-            if cashback and cashback != '' and ((data['price'] > 1000000 and cashback['value'] > 1) or cashback['value'] > 4): cashbackPercent = cashback['value']
-            else: cashback = ''
+            cashbackAplied = ''
+            if cashback and cashback != '' and ((data['price'] > 1000000 and cashback['value'] > 1) or cashback['value'] > 4): 
+                cashbackPercent = cashback['value']
+                cashbackAplied = cashback
             finalPrice = int((data['price'] - bestCouponDiscount)*(1-cashbackPercent/100))
             print(finalPrice)
             if 1:#finalPrice != data['price'] - bestCouponDiscount:
-                r = api.update_product_retailers(product['id'], bot.retailer_id, {"price": finalPrice, "coupon_id": bestCouponId, "cashback": cashback, "available": True})
+                r = api.update_product_retailers(product['id'], bot.retailer_id, {"price": finalPrice, "coupon_id": bestCouponId, "cashback": cashbackAplied, "available": True})
                 
                 if r.status_code == 200:
                     print(f'{product["title"]} -> atualizado com sucesso!')
