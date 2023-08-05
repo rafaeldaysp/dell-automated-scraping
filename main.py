@@ -77,6 +77,7 @@ def main():
             bestCouponId, bestCouponDiscount = chooseBestCoupon(validCoupons, allCoupons)
             cashbackPercent = 0
             if cashback and cashback != '' and (data['price'] > 1000000 and cashback['value'] > 1 or cashback['value'] > 4): cashbackPercent = cashback['value']
+            else: cashback = ''
             finalPrice = int((data['price'] - bestCouponDiscount)*(1-cashbackPercent/100))
             print(finalPrice)
             if 1:#finalPrice != data['price'] - bestCouponDiscount:
