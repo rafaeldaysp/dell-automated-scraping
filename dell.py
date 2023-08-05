@@ -53,7 +53,10 @@ class DellBot():
             '/html/body/main/section[2]/div[1]/div[1]/div[2]/div[2]/span[1]/span[2]',
             '//*[@id="cf-body"]/div[4]/div[2]/div[2]/div/div[2]/div',
             '/html/body/div[4]/div[1]/div[5]/div/div/article/section/div[2]/div[1]/div[1]',
-            '//*[@id="460-bczs"]/section/div[2]/div[1]/div[1]'
+            '//*[@id="460-bczs"]/section/div[2]/div[1]/div[1]',
+            '/html/body/div[4]/div[1]/div[5]/div/div/article/section/div[2]/div[1]/div[2]/span[2]',
+            '//*[@id="460-bdlk"]/section/div[2]/div[1]/div[2]/span[2]'
+            
         ]
         element_located = False
         price = 0
@@ -65,6 +68,7 @@ class DellBot():
             except:
                 pass
         if not element_located:
+            print('Preço não localizado')
             raise
         print(price)
         # try:
@@ -79,8 +83,8 @@ class DellBot():
             '//*[@id="cf-body"]/div[4]/div[2]/div[6]/button',
             '//*[@id="cf-body"]/div[4]/div[2]/div[5]/button',
             '//*[@id="cf-body"]/div[4]/div[2]/div[7]/button',
-            '//*[@id="460-bczs"]/section/div[5]/div/a'
-            
+            '//*[@id="460-bczs"]/section/div[5]/div/a',
+            '//*[@id="460-bdlk"]/section/div[5]/div/a'
         ]
         
         element_located = False
