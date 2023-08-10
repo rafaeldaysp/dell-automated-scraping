@@ -109,11 +109,11 @@ class DellBot():
         priceReturn = 0
         
         try:
-            self.browser.find_element(By.XPATH, '/html/body/div[3]/div/section/div/div/div[1]/div[1]/div[2]/div[2]/div[5]/aside[1]/div/div/applycoupon/div[1]/div/div/div/input').clear()
-            self.browser.find_element(By.XPATH, '/html/body/div[3]/div/section/div/div/div[1]/div[1]/div[2]/div[2]/div[5]/aside[1]/div/div/applycoupon/div[1]/div/div/div/input').send_keys(couponCode)
-            self.browser.find_element(By.XPATH, '/html/body/div[3]/div/section/div/div/div[1]/div[1]/div[2]/div[2]/div[5]/aside[1]/div/div/applycoupon/div[1]/div/div/div/span/button').click()
+            self.browser.find_element(By.XPATH, '/html/body/div[4]/div/section/div/div/div[1]/div[1]/div[2]/div[2]/div[5]/aside[1]/div/div/applycoupon/div[1]/div/div/div/input').clear()
+            self.browser.find_element(By.XPATH, '/html/body/div[4]/div/section/div/div/div[1]/div[1]/div[2]/div[2]/div[5]/aside[1]/div/div/applycoupon/div[1]/div/div/div/input').send_keys(couponCode)
+            self.browser.find_element(By.XPATH, '/html/body/div[4]/div/section/div/div/div[1]/div[1]/div[2]/div[2]/div[5]/aside[1]/div/div/applycoupon/div[1]/div/div/div/span/button').click()
             time.sleep(SLEEP_TIME)
-            self.browser.find_element(By.XPATH, '/html/body/div[3]/div/section/div/div/div[1]/div[1]/div[2]/div[2]/div[5]/aside[1]/div/div/applycoupon/div[1]/div/div/div/span/button').click()
+            self.browser.find_element(By.XPATH, '/html/body/div[4]/div/section/div/div/div[1]/div[1]/div[2]/div[2]/div[5]/aside[1]/div/div/applycoupon/div[1]/div/div/div/span/button').click()
             time.sleep(SLEEP_TIME)
             currentPrice = int(self.browser.find_element(By.XPATH, '//*[@id="nonpcaas-cart-summary"]/div[3]/ul/li/div[2]/strong').text[2:].replace(',', '').replace('.', '')) 
         except:
@@ -138,10 +138,13 @@ class DellBot():
 
         xpath_list = [
             '/html/body/div[3]/div/section/div/div/div[1]/div[1]/div[2]/div[2]/div[5]/section/div/div/div/div[1]/section/div[2]/div/div[2]/div/div/div[4]/div[1]/div[3]/div[2]/div[1]/div/item-quantity/div/div/a',
+            '/html/body/div[4]/div/section/div/div/div[1]/div[1]/div[2]/div[2]/div[5]/section/div/div/div/div[1]/section/div[2]/div/div[2]/div/div/div[4]/div[1]/div[3]/div[2]/div[1]/div/item-quantity/div/div/a',
             '/html/body/div[4]/div/section/div/div/div[1]/div[1]/div[2]/div[2]/div[5]/section/div/div/div/div[2]/section/div[2]/div/div[2]/div/div/div[4]/div[1]/div[3]/div[2]/div[1]/div/item-quantity/div/div/a',
             '/html/body/div[4]/div/section/div/div/div[1]/div[1]/div[2]/div[2]/div[5]/section/div/div/div/div[2]/section/div[2]/div/div[2]/div/div/div[1]/div[4]/div[1]/div[3]/div[2]/div[1]/div/item-quantity/div/div/a',
             '/html/body/div[3]/div/section/div/div/div[1]/div[1]/div[2]/div[2]/div[5]/section/div/div/div/div[1]/section/div[2]/div/div[2]/div/div/div[1]/div[4]/div[1]/div[3]/div[2]/div[1]/div/item-quantity/div/div/a',
-            '/html/body/div[3]/div/section/div/div/div[1]/div[1]/div[2]/div[2]/div[5]/section/div/div/div/div[1]/section/div[2]/div/div[2]/div/div/div[1]/div[4]/div[1]/div[3]/div[2]/div[1]/div/item-quantity/div/div/a'
+            '/html/body/div[3]/div/section/div/div/div[1]/div[1]/div[2]/div[2]/div[5]/section/div/div/div/div[1]/section/div[2]/div/div[2]/div/div/div[1]/div[4]/div[1]/div[3]/div[2]/div[1]/div/item-quantity/div/div/a',
+            '/html/body/div[4]/div/section/div/div/div[1]/div[1]/div[2]/div[2]/div[5]/section/div/div/div/div[1]/section/div[2]/div/div[2]/div/div/div[1]/div[4]/div[1]/div[3]/div[2]/div[1]/div/item-quantity/div/div/a',
+            '/html/body/div[4]/div/section/div/div/div[1]/div[1]/div[2]/div[2]/div[5]/section/div/div/div/div[1]/section/div[2]/div/div[2]/div/div/div[1]/div[4]/div[1]/div[3]/div[2]/div[1]/div/item-quantity/div/div/a'
         ]
         
         removed = False
@@ -161,13 +164,13 @@ class DellBot():
     def removeCoupon(self, couponRank, restarted=False):
         try:
             if couponRank == 1:
-                self.browser.find_element(By.XPATH, f'/html/body/div[3]/div/section/div/div/div[1]/div[1]/div[2]/div[2]/div[5]/aside[1]/div/div/desktopappliedcouponmessagewrapper/div[1]/div/div[2]/p[2]/small/a[2]').click()
+                self.browser.find_element(By.XPATH, f'/html/body/div[4]/div/section/div/div/div[1]/div[1]/div[2]/div[2]/div[5]/aside[1]/div/div/desktopappliedcouponmessagewrapper/div[1]/div/div[2]/p[2]/small/a[2]').click()
                 time.sleep(SLEEP_TIME)
-                self.browser.find_element(By.XPATH, f'/html/body/div[3]/div/section/div/div/div[1]/div[1]/div[2]/div[2]/div[5]/aside[1]/div/div/desktopappliedcouponmessagewrapper/div[3]/div/removeappliedcouponmodal/div[3]/button[2]').click()
+                self.browser.find_element(By.XPATH, f'/html/body/div[4]/div/section/div/div/div[1]/div[1]/div[2]/div[2]/div[5]/aside[1]/div/div/desktopappliedcouponmessagewrapper/div[3]/div/removeappliedcouponmodal/div[3]/button[2]').click()
             else:
-                self.browser.find_element(By.XPATH, f'/html/body/div[3]/div/section/div/div/div[1]/div[1]/div[2]/div[2]/div[5]/aside[1]/div/div/desktopappliedcouponmessagewrapper/div[1]/div[2]/div[2]/p[2]/small/a[2]').click()
+                self.browser.find_element(By.XPATH, f'/html/body/div[4]/div/section/div/div/div[1]/div[1]/div[2]/div[2]/div[5]/aside[1]/div/div/desktopappliedcouponmessagewrapper/div[1]/div[2]/div[2]/p[2]/small/a[2]').click()
                 time.sleep(SLEEP_TIME)
-                self.browser.find_element(By.XPATH, '/html/body/div[3]/div/section/div/div/div[1]/div[1]/div[2]/div[2]/div[5]/aside[1]/div/div/desktopappliedcouponmessagewrapper/div[5]/div/removeappliedcouponmodal/div[3]/button[2]').click()
+                self.browser.find_element(By.XPATH, '/html/body/div[4]/div/section/div/div/div[1]/div[1]/div[2]/div[2]/div[5]/aside[1]/div/div/desktopappliedcouponmessagewrapper/div[5]/div/removeappliedcouponmodal/div[3]/button[2]').click()
         except Exception as e:
             print('Reiniciando processo de remover cupom.')
             time.sleep(30)
