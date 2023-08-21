@@ -37,7 +37,7 @@ def main():
     allCoupons = api.get_coupons(bot.retailer_id)
     coupons = [coupon for coupon in allCoupons if coupon['available'] and ' + ' not in coupon['code']]
     products = api.get_retailer_products(bot.retailer_id)
-    #products = [ product for product in products if 'Notebook Gamer Dell Alienware M16 R1 I9 13900HX RTX 4060' in product['title']]
+    #products = [ product for product in products if 'G15' in product['title']]
     cashback = bot.bestCashbackFinder()
     
     print(cashback)
@@ -77,7 +77,7 @@ def main():
             bestCouponId, bestCouponDiscount = chooseBestCoupon(validCoupons, allCoupons)
             cashbackPercent = 0
             cashbackAplied = ''
-            if cashback and cashback != '' and ((data['price'] > 1000000 and cashback['value'] > 1) or cashback['value'] > 4): 
+            if cashback and cashback != '' and ((data['price'] > 1000000 and cashback['value'] > 1) or cashback['value'] > 4 or cashback['name'] == 'Cuponomia'): 
                 cashbackPercent = cashback['value']
                 cashbackAplied = cashback
             finalPrice = int((data['price'] - bestCouponDiscount)*(1-cashbackPercent/100))
