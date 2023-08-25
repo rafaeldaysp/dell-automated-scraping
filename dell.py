@@ -4,8 +4,16 @@ from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 import time
 import api
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
 
 SLEEP_TIME = 7
+
+MAIN_DIV_INDEX_ON_DELL = (os.getenv('MAIN_DIV_INDEX_ON_DELL'))
+
+print("index of main div: ", MAIN_DIV_INDEX_ON_DELL)
 
 class DellBot():
     def __init__(self) -> None:
@@ -53,6 +61,9 @@ class DellBot():
             '/html/body/main/section[2]/div[1]/div[1]/div[2]/div[2]/span[1]/span[2]',
             '//*[@id="cf-body"]/div[4]/div[2]/div[2]/div/div[2]/div',
             '/html/body/div[4]/div[1]/div[5]/div/div/article/section/div[2]/div[1]/div[1]',
+            '/html/body/div[3]/div[1]/div[5]/div/div/article/section/div[2]/div[1]/div[1]',
+            f'/html/body/div[{MAIN_DIV_INDEX_ON_DELL}]/div[1]/div[5]/div/div/article/section/div[2]/div[1]/div[1]',
+            '//*[@id="460-bdlk"]/section/div[2]/div[1]/div[1]',
             '//*[@id="460-bczs"]/section/div[2]/div[1]/div[1]',
             '/html/body/div[4]/div[1]/div[5]/div/div/article/section/div[2]/div[1]/div[2]/span[2]',
             '//*[@id="460-bdlk"]/section/div[2]/div[1]/div[2]/span[2]'
@@ -109,11 +120,11 @@ class DellBot():
         priceReturn = 0
         
         try:
-            self.browser.find_element(By.XPATH, '/html/body/div[4]/div/section/div/div/div[1]/div[1]/div[2]/div[2]/div[5]/aside[1]/div/div/applycoupon/div[1]/div/div/div/input').clear()
-            self.browser.find_element(By.XPATH, '/html/body/div[4]/div/section/div/div/div[1]/div[1]/div[2]/div[2]/div[5]/aside[1]/div/div/applycoupon/div[1]/div/div/div/input').send_keys(couponCode)
-            self.browser.find_element(By.XPATH, '/html/body/div[4]/div/section/div/div/div[1]/div[1]/div[2]/div[2]/div[5]/aside[1]/div/div/applycoupon/div[1]/div/div/div/span/button').click()
+            self.browser.find_element(By.XPATH, f'/html/body/div[{MAIN_DIV_INDEX_ON_DELL}]/div/section/div/div/div[1]/div[1]/div[2]/div[2]/div[5]/aside[1]/div/div/applycoupon/div[1]/div/div/div/input').clear()
+            self.browser.find_element(By.XPATH, f'/html/body/div[{MAIN_DIV_INDEX_ON_DELL}]/div/section/div/div/div[1]/div[1]/div[2]/div[2]/div[5]/aside[1]/div/div/applycoupon/div[1]/div/div/div/input').send_keys(couponCode)
+            self.browser.find_element(By.XPATH, f'/html/body/div[{MAIN_DIV_INDEX_ON_DELL}]/div/section/div/div/div[1]/div[1]/div[2]/div[2]/div[5]/aside[1]/div/div/applycoupon/div[1]/div/div/div/span/button').click()
             time.sleep(SLEEP_TIME)
-            self.browser.find_element(By.XPATH, '/html/body/div[4]/div/section/div/div/div[1]/div[1]/div[2]/div[2]/div[5]/aside[1]/div/div/applycoupon/div[1]/div/div/div/span/button').click()
+            self.browser.find_element(By.XPATH, f'/html/body/div[{MAIN_DIV_INDEX_ON_DELL}]/div/section/div/div/div[1]/div[1]/div[2]/div[2]/div[5]/aside[1]/div/div/applycoupon/div[1]/div/div/div/span/button').click()
             time.sleep(SLEEP_TIME)
             currentPrice = int(self.browser.find_element(By.XPATH, '//*[@id="nonpcaas-cart-summary"]/div[3]/ul/li/div[2]/strong').text[2:].replace(',', '').replace('.', '')) 
         except:
@@ -137,14 +148,14 @@ class DellBot():
     def removeFromCart(self):
 
         xpath_list = [
-            '/html/body/div[3]/div/section/div/div/div[1]/div[1]/div[2]/div[2]/div[5]/section/div/div/div/div[1]/section/div[2]/div/div[2]/div/div/div[4]/div[1]/div[3]/div[2]/div[1]/div/item-quantity/div/div/a',
-            '/html/body/div[4]/div/section/div/div/div[1]/div[1]/div[2]/div[2]/div[5]/section/div/div/div/div[1]/section/div[2]/div/div[2]/div/div/div[4]/div[1]/div[3]/div[2]/div[1]/div/item-quantity/div/div/a',
-            '/html/body/div[4]/div/section/div/div/div[1]/div[1]/div[2]/div[2]/div[5]/section/div/div/div/div[2]/section/div[2]/div/div[2]/div/div/div[4]/div[1]/div[3]/div[2]/div[1]/div/item-quantity/div/div/a',
-            '/html/body/div[4]/div/section/div/div/div[1]/div[1]/div[2]/div[2]/div[5]/section/div/div/div/div[2]/section/div[2]/div/div[2]/div/div/div[1]/div[4]/div[1]/div[3]/div[2]/div[1]/div/item-quantity/div/div/a',
-            '/html/body/div[3]/div/section/div/div/div[1]/div[1]/div[2]/div[2]/div[5]/section/div/div/div/div[1]/section/div[2]/div/div[2]/div/div/div[1]/div[4]/div[1]/div[3]/div[2]/div[1]/div/item-quantity/div/div/a',
-            '/html/body/div[3]/div/section/div/div/div[1]/div[1]/div[2]/div[2]/div[5]/section/div/div/div/div[1]/section/div[2]/div/div[2]/div/div/div[1]/div[4]/div[1]/div[3]/div[2]/div[1]/div/item-quantity/div/div/a',
-            '/html/body/div[4]/div/section/div/div/div[1]/div[1]/div[2]/div[2]/div[5]/section/div/div/div/div[1]/section/div[2]/div/div[2]/div/div/div[1]/div[4]/div[1]/div[3]/div[2]/div[1]/div/item-quantity/div/div/a',
-            '/html/body/div[4]/div/section/div/div/div[1]/div[1]/div[2]/div[2]/div[5]/section/div/div/div/div[1]/section/div[2]/div/div[2]/div/div/div[1]/div[4]/div[1]/div[3]/div[2]/div[1]/div/item-quantity/div/div/a'
+            f'/html/body/div[{MAIN_DIV_INDEX_ON_DELL}]/div/section/div/div/div[1]/div[1]/div[2]/div[2]/div[5]/section/div/div/div/div[1]/section/div[2]/div/div[2]/div/div/div[4]/div[1]/div[3]/div[2]/div[1]/div/item-quantity/div/div/a',
+            f'/html/body/div[{MAIN_DIV_INDEX_ON_DELL}]/div/section/div/div/div[1]/div[1]/div[2]/div[2]/div[5]/section/div/div/div/div[1]/section/div[2]/div/div[2]/div/div/div[4]/div[1]/div[3]/div[2]/div[1]/div/item-quantity/div/div/a',
+            f'/html/body/div[{MAIN_DIV_INDEX_ON_DELL}]/div/section/div/div/div[1]/div[1]/div[2]/div[2]/div[5]/section/div/div/div/div[2]/section/div[2]/div/div[2]/div/div/div[4]/div[1]/div[3]/div[2]/div[1]/div/item-quantity/div/div/a',
+            f'/html/body/div[{MAIN_DIV_INDEX_ON_DELL}]/div/section/div/div/div[1]/div[1]/div[2]/div[2]/div[5]/section/div/div/div/div[2]/section/div[2]/div/div[2]/div/div/div[1]/div[4]/div[1]/div[3]/div[2]/div[1]/div/item-quantity/div/div/a',
+            f'/html/body/div[3]/div/section/div/div/div[1]/div[1]/div[2]/div[2]/div[5]/section/div/div/div/div[1]/section/div[2]/div/div[2]/div/div/div[1]/div[4]/div[1]/div[3]/div[2]/div[1]/div/item-quantity/div/div/a',
+            f'/html/body/div[3]/div/section/div/div/div[1]/div[1]/div[2]/div[2]/div[5]/section/div/div/div/div[1]/section/div[2]/div/div[2]/div/div/div[1]/div[4]/div[1]/div[3]/div[2]/div[1]/div/item-quantity/div/div/a',
+            f'/html/body/div[4]/div/section/div/div/div[1]/div[1]/div[2]/div[2]/div[5]/section/div/div/div/div[1]/section/div[2]/div/div[2]/div/div/div[1]/div[4]/div[1]/div[3]/div[2]/div[1]/div/item-quantity/div/div/a',
+            f'/html/body/div[4]/div/section/div/div/div[1]/div[1]/div[2]/div[2]/div[5]/section/div/div/div/div[1]/section/div[2]/div/div[2]/div/div/div[1]/div[4]/div[1]/div[3]/div[2]/div[1]/div/item-quantity/div/div/a'
         ]
         
         removed = False
@@ -164,13 +175,13 @@ class DellBot():
     def removeCoupon(self, couponRank, restarted=False):
         try:
             if couponRank == 1:
-                self.browser.find_element(By.XPATH, f'/html/body/div[4]/div/section/div/div/div[1]/div[1]/div[2]/div[2]/div[5]/aside[1]/div/div/desktopappliedcouponmessagewrapper/div[1]/div/div[2]/p[2]/small/a[2]').click()
+                self.browser.find_element(By.XPATH, f'/html/body/div[{MAIN_DIV_INDEX_ON_DELL}]/div/section/div/div/div[1]/div[1]/div[2]/div[2]/div[5]/aside[1]/div/div/desktopappliedcouponmessagewrapper/div[1]/div/div[2]/p[2]/small/a[2]').click()
                 time.sleep(SLEEP_TIME)
-                self.browser.find_element(By.XPATH, f'/html/body/div[4]/div/section/div/div/div[1]/div[1]/div[2]/div[2]/div[5]/aside[1]/div/div/desktopappliedcouponmessagewrapper/div[3]/div/removeappliedcouponmodal/div[3]/button[2]').click()
+                self.browser.find_element(By.XPATH, f'/html/body/div[{MAIN_DIV_INDEX_ON_DELL}]/div/section/div/div/div[1]/div[1]/div[2]/div[2]/div[5]/aside[1]/div/div/desktopappliedcouponmessagewrapper/div[3]/div/removeappliedcouponmodal/div[3]/button[2]').click()
             else:
-                self.browser.find_element(By.XPATH, f'/html/body/div[4]/div/section/div/div/div[1]/div[1]/div[2]/div[2]/div[5]/aside[1]/div/div/desktopappliedcouponmessagewrapper/div[1]/div[2]/div[2]/p[2]/small/a[2]').click()
+                self.browser.find_element(By.XPATH, f'/html/body/div[{MAIN_DIV_INDEX_ON_DELL}]/div/section/div/div/div[1]/div[1]/div[2]/div[2]/div[5]/aside[1]/div/div/desktopappliedcouponmessagewrapper/div[1]/div[2]/div[2]/p[2]/small/a[2]').click()
                 time.sleep(SLEEP_TIME)
-                self.browser.find_element(By.XPATH, '/html/body/div[4]/div/section/div/div/div[1]/div[1]/div[2]/div[2]/div[5]/aside[1]/div/div/desktopappliedcouponmessagewrapper/div[5]/div/removeappliedcouponmodal/div[3]/button[2]').click()
+                self.browser.find_element(By.XPATH, '/html/body/div[{MAIN_DIV_INDEX_ON_DELL}]/div/section/div/div/div[1]/div[1]/div[2]/div[2]/div[5]/aside[1]/div/div/desktopappliedcouponmessagewrapper/div[5]/div/removeappliedcouponmodal/div[3]/button[2]').click()
         except Exception as e:
             print('Reiniciando processo de remover cupom.')
             time.sleep(30)
