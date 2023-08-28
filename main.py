@@ -25,7 +25,7 @@ def chooseBestCoupon(validCoupons: list, allCoupons: list) -> dict:
         r = api.create_coupon(bestCoupon)
         bestCoupon['id'] = json.loads(r.content)['id']
         
-    return bestCoupon['id'], bestCouponDiscount
+    return bestCoupon['id'], bestCouponDiscount, bestCoupon['code']
 
 def removeCompetitorCoupons(bestProviderName: str, couponList: list, providerList: list) -> list:
     competitorsNames = [provider['name'] for provider in providerList if provider['name'] != bestProviderName]
@@ -37,12 +37,16 @@ def main():
     allCoupons = api.get_coupons(bot.retailer_id)
     coupons = [coupon for coupon in allCoupons if coupon['available'] and ' + ' not in coupon['code']]
     products = api.get_retailer_products(bot.retailer_id)
-    #products = [ product for product in products if 'G15' in product['title']]
+    #products = [ product for product in products if 'Alienware' in product['title']]
+    
     cashback = bot.bestCashbackFinder()
     
     print(cashback)
+    
     if cashback:
         coupons = removeCompetitorCoupons(cashback['name'], coupons, bot.cashbackProviders)
+        if cashback['value'] > 2:
+            coupons = [coupon for coupon in coupons if 'BENCHPROMOSAW' not in coupon['code']]
 
     for product in products:
         try:
@@ -66,18 +70,19 @@ def main():
                 if currentPrice:
                     validCoupons.append({"code": firstCoupon['code'], "discount": data['price'] - currentPrice, "available": True, "retailer_id": bot.retailer_id, "discountLabel": firstCoupon['discount'],
                                         "comments": firstCoupon['comments']})
-                    for secondCoupon in [coupon for coupon in coupons if coupon != firstCoupon]:
-                        print(f"testando cupom {secondCoupon['code']}")
-                        secondCurrentPrice = bot.tryCoupon(secondCoupon['code'], currentPrice)
-                        if secondCurrentPrice:
-                            validCoupons.append({"code": f'{firstCoupon["code"]} + {secondCoupon["code"]}', "discount": data['price'] - secondCurrentPrice, "available": True, "retailer_id": bot.retailer_id, "discountLabel": f'{firstCoupon["discount"]} + {secondCoupon["discount"]}',
-                                                "comments": "Combinação de cupons disponível na Dell. Obs: não funciona em todos os produtos."})
-                            bot.removeCoupon(2)
+                    # for secondCoupon in [coupon for coupon in coupons if coupon['code'] != firstCoupon['code']]:
+                    #     print(f"testando cupom {secondCoupon['code']}")
+                    #     secondCurrentPrice = bot.tryCoupon(secondCoupon['code'], currentPrice)
+                    #     print(currentPrice, secondCurrentPrice)
+                    #     if secondCurrentPrice:
+                    #         validCoupons.append({"code": f'{firstCoupon["code"]} + {secondCoupon["code"]}', "discount": data['price'] - secondCurrentPrice, "available": True, "retailer_id": bot.retailer_id, "discountLabel": f'{firstCoupon["discount"]} + {secondCoupon["discount"]}',
+                    #                             "comments": "Combinação de cupons disponível na Dell. Obs: não funciona em todos os produtos."})
+                    #         bot.removeCoupon(2)
                     bot.removeCoupon(1)
-            bestCouponId, bestCouponDiscount = chooseBestCoupon(validCoupons, allCoupons)
+            bestCouponId, bestCouponDiscount, bestCouponCode = chooseBestCoupon(validCoupons, allCoupons)
             cashbackPercent = 0
             cashbackAplied = ''
-            if cashback and cashback != '' and ((data['price'] > 1000000 and cashback['value'] > 1) or cashback['value'] > 4 or cashback['name'] == 'Cuponomia'): 
+            if cashback and cashback != '' and ((data['price'] > 1000000 and cashback['value'] > 1) or cashback['value'] > 4 or cashback['name'] == 'Cuponomia') and 'BENCHPROMOS' not in bestCouponCode: 
                 cashbackPercent = cashback['value']
                 cashbackAplied = cashback
             finalPrice = int((data['price'] - bestCouponDiscount)*(1-cashbackPercent/100))

@@ -95,7 +95,8 @@ class DellBot():
             '//*[@id="cf-body"]/div[4]/div[2]/div[5]/button',
             '//*[@id="cf-body"]/div[4]/div[2]/div[7]/button',
             '//*[@id="460-bczs"]/section/div[5]/div/a',
-            '//*[@id="460-bdlk"]/section/div[5]/div/a'
+            '//*[@id="460-bdlk"]/section/div[5]/div/a',
+            '/html/body/main/section[1]/div/div/div/div[2]/div/div[2]/button',
         ]
         
         element_located = False
@@ -153,6 +154,7 @@ class DellBot():
             f'/html/body/div[{MAIN_DIV_INDEX_ON_DELL}]/div/section/div/div/div[1]/div[1]/div[2]/div[2]/div[5]/section/div/div/div/div[2]/section/div[2]/div/div[2]/div/div/div[4]/div[1]/div[3]/div[2]/div[1]/div/item-quantity/div/div/a',
             f'/html/body/div[{MAIN_DIV_INDEX_ON_DELL}]/div/section/div/div/div[1]/div[1]/div[2]/div[2]/div[5]/section/div/div/div/div[2]/section/div[2]/div/div[2]/div/div/div[1]/div[4]/div[1]/div[3]/div[2]/div[1]/div/item-quantity/div/div/a',
             f'/html/body/div[{MAIN_DIV_INDEX_ON_DELL}]/div/section/div/div/div[1]/div[1]/div[2]/div[2]/div[5]/section/div/div/div/div[1]/section/div[2]/div/div[2]/div/div/div[1]/div[4]/div[1]/div[3]/div[2]/div[1]/div/item-quantity/div/div/a',
+            f'/html/body/div[2]/div/section/div/div/div[1]/div[1]/div[2]/div[2]/div[5]/section/div/div/div/div[1]/section/div[2]/div/div[2]/div/div/div[4]/div[1]/div[3]/div[2]/div[1]/div/item-quantity/div/div/a',
             f'/html/body/div[3]/div/section/div/div/div[1]/div[1]/div[2]/div[2]/div[5]/section/div/div/div/div[1]/section/div[2]/div/div[2]/div/div/div[1]/div[4]/div[1]/div[3]/div[2]/div[1]/div/item-quantity/div/div/a',
             f'/html/body/div[3]/div/section/div/div/div[1]/div[1]/div[2]/div[2]/div[5]/section/div/div/div/div[1]/section/div[2]/div/div[2]/div/div/div[1]/div[4]/div[1]/div[3]/div[2]/div[1]/div/item-quantity/div/div/a',
             f'/html/body/div[4]/div/section/div/div/div[1]/div[1]/div[2]/div[2]/div[5]/section/div/div/div/div[1]/section/div[2]/div/div[2]/div/div/div[1]/div[4]/div[1]/div[3]/div[2]/div[1]/div/item-quantity/div/div/a',
@@ -174,23 +176,47 @@ class DellBot():
         time.sleep(SLEEP_TIME)
         
     def removeCoupon(self, couponRank, restarted=False):
-        try:
-            if couponRank == 1:
-                self.browser.find_element(By.XPATH, f'/html/body/div[{MAIN_DIV_INDEX_ON_DELL}]/div/section/div/div/div[1]/div[1]/div[2]/div[2]/div[5]/aside[1]/div/div/desktopappliedcouponmessagewrapper/div[1]/div/div[2]/p[2]/small/a[2]').click()
-                time.sleep(SLEEP_TIME)
-                self.browser.find_element(By.XPATH, f'/html/body/div[{MAIN_DIV_INDEX_ON_DELL}]/div/section/div/div/div[1]/div[1]/div[2]/div[2]/div[5]/aside[1]/div/div/desktopappliedcouponmessagewrapper/div[3]/div/removeappliedcouponmodal/div[3]/button[2]').click()
-            else:
-                self.browser.find_element(By.XPATH, f'/html/body/div[{MAIN_DIV_INDEX_ON_DELL}]/div/section/div/div/div[1]/div[1]/div[2]/div[2]/div[5]/aside[1]/div/div/desktopappliedcouponmessagewrapper/div[1]/div[2]/div[2]/p[2]/small/a[2]').click()
-                time.sleep(SLEEP_TIME)
-                self.browser.find_element(By.XPATH, '/html/body/div[{MAIN_DIV_INDEX_ON_DELL}]/div/section/div/div/div[1]/div[1]/div[2]/div[2]/div[5]/aside[1]/div/div/desktopappliedcouponmessagewrapper/div[5]/div/removeappliedcouponmodal/div[3]/button[2]').click()
-        except Exception as e:
-            print('Reiniciando processo de remover cupom.')
+        remove_xpath_list = [
+            f'//html/body/div[{MAIN_DIV_INDEX_ON_DELL}]/div/section/div/div/div[1]/div[1]/div[2]/div[2]/div[5]/aside[1]/div/div/desktopappliedcouponmessagewrapper/div[1]/div/div[2]/p[2]/small/a[2]',
+            f'/html/body/div[{MAIN_DIV_INDEX_ON_DELL}]/div/section/div/div/div[1]/div[1]/div[2]/div[2]/div[5]/aside[1]/div/div/desktopappliedcouponmessagewrapper/div[1]/div[2]/div[2]/p[2]/small/a[2]'
+        ]
+        
+        confirm_xpath_list = [
+            f'/html/body/div[{MAIN_DIV_INDEX_ON_DELL}]/div/section/div/div/div[1]/div[1]/div[2]/div[2]/div[5]/aside[1]/div/div/desktopappliedcouponmessagewrapper/div[3]/div/removeappliedcouponmodal/div[3]/button[2]',
+            f'/html/body/div[{MAIN_DIV_INDEX_ON_DELL}]/div/section/div/div/div[1]/div[1]/div[2]/div[2]/div[5]/aside[1]/div/div/desktopappliedcouponmessagewrapper/div[5]/div/removeappliedcouponmodal/div[3]/button[2]'
+        ]
+        
+        clicked = False
+        for xpath in remove_xpath_list:
+            try:
+                self.browser.find_element(By.XPATH, xpath).click()
+                clicked = True
+                break
+            except:
+                pass
+                
+        if not clicked:
+            if(restarted): return
             time.sleep(30)
-            if restarted: return
             self.removeCoupon(couponRank, restarted=True)
-            
         time.sleep(SLEEP_TIME)
-    
+        
+        confirmed = False
+        for xpath in confirm_xpath_list:
+            try:
+                self.browser.find_element(By.XPATH, xpath).click()
+                confirmed = True
+                break
+            except:
+                pass
+                
+        if not confirmed:
+            if(restarted): return
+            time.sleep(30)
+            self.removeCoupon(couponRank, restarted=True)
+        time.sleep(SLEEP_TIME)
+               
+                
     def closeBrowser(self):
         self.browser.quit()
         
