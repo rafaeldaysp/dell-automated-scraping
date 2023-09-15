@@ -5,7 +5,7 @@ import time
 
 def chooseBestCoupon(validCoupons: list, allCoupons: list) -> dict:
     if not validCoupons:
-        return None, 0
+        return None, 0, ''
     
     bestCoupon = validCoupons[0]
     for coupon in validCoupons:
@@ -37,8 +37,7 @@ def main():
     allCoupons = api.get_coupons(bot.retailer_id)
     coupons = [coupon for coupon in allCoupons if coupon['available'] and ' + ' not in coupon['code']]
     products = api.get_retailer_products(bot.retailer_id)
-    #products = [ product for product in products if 'Alienware' in product['title']]
-    
+    # products = [ product for product in products if 'Mochila Dell EcoLoop Pro 15' in product['title']]
     cashback = bot.bestCashbackFinder()
     
     print(cashback)
